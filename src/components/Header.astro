@@ -1,0 +1,112 @@
+---
+const navItems = [
+  { text: '首页', link: '/' },
+  { text: '文章', link: '/posts' },
+  { text: '关于', link: '/about' },
+]
+
+const GITHUB_URL = 'https://github.com/yourusername'; // 替换为您的 GitHub 地址
+---
+
+<script is:inline>
+// 防止主题切换时的闪烁
+const theme = (() => {
+  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+    return localStorage.getItem('theme')
+  }
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark'
+  }
+  return 'light'
+})()
+if (theme === 'dark') {
+  document.documentElement.classList.add('dark')
+}
+</script>
+
+<script>
+// 主题切换实现
+const themeToggle = document.getElementById('theme-toggle')
+const html = document.documentElement
+
+// 主题设置函数
+function setTheme(theme: 'light' | 'dark') {
+  html.classList.remove('light', 'dark')
+  html.classList.add(theme)
+  localStorage.setItem('theme', theme)
+}
+
+// 获取当前主题
+function getTheme() {
+  // 优先使用存储的主题
+  const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+  if (savedTheme)
+    return savedTheme
+
+  // 其次使用系统主题
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
+}
+
+// 初始化主题
+setTheme(getTheme())
+
+// 监听系统主题变化
+window
+  .matchMedia('(prefers-color-scheme: dark)')
+  .addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      setTheme(e.matches ? 'dark' : 'light')
+    }
+  })
+
+// 点击切换主题
+themeToggle?.addEventListener('click', () => {
+  const isDark = html.classList.contains('dark')
+  setTheme(isDark ? 'light' : 'dark')
+})
+</script>
+
+<header
+  class="fixed left-0 right-0 top-0 h-16 border-b backdrop-blur border-base"
+>
+  <nav class="mx-auto h-full max-w-6xl flex items-center justify-between px-6">
+    <div class="text-xl font-medium transition-colors">Blog</div>
+
+    <div class="flex items-center gap-8">
+      <ul class="flex gap-4">
+        {
+          navItems.map(item => (
+            <li>
+              <a
+                href={item.link}
+                class="rounded-md hover:bg-active px-4 py-2 transition-all"
+              >
+                {item.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="flex items-center gap-4">
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-md hover:bg-active p-2 transition-all"
+        >
+          <span class="i-carbon-logo-github text-xl"></span>
+        </a>
+
+        <button
+          id="theme-toggle"
+          class="rounded-md hover:bg-active p-2 transition-all"
+        >
+          <span class="i-carbon-sun dark:i-carbon-moon text-xl"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>

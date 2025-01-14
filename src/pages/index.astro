@@ -1,16 +1,22 @@
 ---
 import BaseHead from '../components/BaseHead.astro'
+import Header from '../components/Header.astro'
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh" class="light">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
   <body>
-    <main>
-      <h1 class="text-green">Hello World!</h1>
+    <Header />
+    <main class="of-x-hidden py-10 pb-7 pt-16">
+      <article>
+        <div class="m-auto prose">
+          <h1 class="text-2xl">Hello World!</h1>
+        </div>
+      </article>
     </main>
   </body>
 </html>
